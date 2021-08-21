@@ -1,0 +1,15 @@
+title Untitled
+
+note over browser:
+Submmit a new filed
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/spa
+server-->browser: HTML Status 201, {"message":"note created"}
+
+note over browser:
+The event handler creates a new note, 
+adds it to the notes list and 
+rerenders the note list on the page
+end note
+
