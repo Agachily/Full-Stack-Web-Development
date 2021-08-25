@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
+// define the dutton component
 const Button = (props) => {
-  // define the dutton component
   return(
     <button onClick={props.onClick}>
       {props.text}
@@ -9,14 +9,18 @@ const Button = (props) => {
   )
 }
 
-const Display = (props) => {
-  // define the display button
+// define the display button
+const Display = ({goodNum, neutralNum,badNum}) => {
+  // save the variables with the destruction machanism
   return(
     <>
     <h1>statistics</h1>
-    <p>good {props.goodNum}</p>
-    <p>neutral {props.neutralNum}</p>
-    <p>bad {props.badNum}</p>
+    <p>good {goodNum}</p>
+    <p>neutral {neutralNum}</p>
+    <p>bad {badNum}</p>
+    <p>all {goodNum + neutralNum + badNum}</p>
+    <p>average {(goodNum - badNum) / (goodNum + neutralNum + badNum)}</p>
+    <p>positive {(100 * goodNum)/(badNum + neutralNum + goodNum)}%</p>
     </>
   )
 }
