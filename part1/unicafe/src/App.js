@@ -9,18 +9,36 @@ const Button = (props) => {
   )
 }
 
+const StatisticLine = ({text, value}) =>{
+  return(
+    <>
+    <td>{text}</td>
+    <td>{value}</td>
+    </>
+  )
+}
+
 // define the display button
-const Display = ({goodNum, neutralNum,badNum}) => {
+const Statistics = ({goodNum, neutralNum,badNum}) => {
   // save the variables with the destruction machanism
+  if((goodNum + neutralNum + badNum) == 0){
+    return(
+      <>
+      <StatisticLine text='No feedback given' value=''/>
+      </>
+    )
+  }
   return(
     <>
     <h1>statistics</h1>
-    <p>good {goodNum}</p>
-    <p>neutral {neutralNum}</p>
-    <p>bad {badNum}</p>
-    <p>all {goodNum + neutralNum + badNum}</p>
-    <p>average {(goodNum - badNum) / (goodNum + neutralNum + badNum)}</p>
-    <p>positive {(100 * goodNum)/(badNum + neutralNum + goodNum)}%</p>
+    <table>
+    <tr><StatisticLine text='good' value={+goodNum}/></tr>
+    <tr><StatisticLine text='neutral' value={neutralNum}/></tr>
+    <tr><StatisticLine text='bad' value={badNum}/></tr>
+    <tr><StatisticLine text='all' value={goodNum + neutralNum + badNum}/></tr>
+    <tr><StatisticLine text='average' value={(goodNum - badNum) / (goodNum + neutralNum + badNum)}/></tr>
+    <tr><StatisticLine text='positive' value={(100 * goodNum)/(badNum + neutralNum + goodNum)+"%"}/></tr>
+    </table>
     </>
   )
 }
@@ -38,6 +56,7 @@ const App = () => {
 
   return (
     <div>
+      <h1>give feedback</h1>
       <Button 
         onClick={addGood}
         text='good'
@@ -50,7 +69,7 @@ const App = () => {
         onClick={addBad}
         text='bad'
       />
-      <Display goodNum={good} neutralNum={neutral} badNum={bad}/>
+      <Statistics goodNum={good} neutralNum={neutral} badNum={bad}/>
     </div>
   )
 }
