@@ -21,23 +21,22 @@ const StatisticLine = ({text, value}) =>{
 // define the display button
 const Statistics = ({goodNum, neutralNum,badNum}) => {
   // save the variables with the destruction machanism
-  if((goodNum + neutralNum + badNum) == 0){
+  if((goodNum + neutralNum + badNum) === 0){
     return(
-      <>
-      <StatisticLine text='No feedback given' value=''/>
-      </>
+      <div>No feedback given</div>
     )
   }
   return(
     <>
-    <h1>statistics</h1>
     <table>
-    <tr><StatisticLine text='good' value={+goodNum}/></tr>
-    <tr><StatisticLine text='neutral' value={neutralNum}/></tr>
-    <tr><StatisticLine text='bad' value={badNum}/></tr>
-    <tr><StatisticLine text='all' value={goodNum + neutralNum + badNum}/></tr>
-    <tr><StatisticLine text='average' value={(goodNum - badNum) / (goodNum + neutralNum + badNum)}/></tr>
-    <tr><StatisticLine text='positive' value={(100 * goodNum)/(badNum + neutralNum + goodNum)+"%"}/></tr>
+      <tbody>
+        <tr><StatisticLine text='good' value={+goodNum}/></tr>
+        <tr><StatisticLine text='neutral' value={neutralNum}/></tr>
+        <tr><StatisticLine text='bad' value={badNum}/></tr>
+        <tr><StatisticLine text='all' value={goodNum + neutralNum + badNum}/></tr>
+        <tr><StatisticLine text='average' value={(goodNum - badNum) / (goodNum + neutralNum + badNum)}/></tr>
+        <tr><StatisticLine text='positive' value={(100 * goodNum)/(badNum + neutralNum + goodNum)+"%"}/></tr>
+      </tbody>
     </table>
     </>
   )
@@ -69,6 +68,7 @@ const App = () => {
         onClick={addBad}
         text='bad'
       />
+      <h1>statistics</h1>
       <Statistics goodNum={good} neutralNum={neutral} badNum={bad}/>
     </div>
   )
