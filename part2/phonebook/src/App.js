@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
 
+const Person = ({person}) => {
+  return(
+    <div>{person.name}</div>
+  )
+}
+
 const App = () => {
   const [ persons, setPersons ] = useState([
     { name: 'Arto Hellas' }
@@ -12,12 +18,24 @@ const App = () => {
   }
 
   const addPerson = (event) => {
+    let flag = false
+
     event.preventDefault()
     const personObject = {
       name: newName
     }
-    setPersons(persons.concat(personObject))
-    setNewName('')
+   
+    persons.forEach(value => {
+      if(value.name === newName){flag = true}
+    })
+    
+    if (!flag){
+      setPersons(persons.concat(personObject))
+      setNewName('')
+    }else{
+      alert(newName + ' is already added to phonebook')
+    }
+    
   }
 
   return (
@@ -34,7 +52,7 @@ const App = () => {
       <h2>Numbers</h2>
       <div>
         {persons.map(value => 
-          <div>{value.name}</div>
+          <Person key={value.name} person={value}/>
         )}
       </div>
     </div>
