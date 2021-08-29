@@ -1,23 +1,50 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+const weather_api_key = process.env.REACT_APP_API_KEY
 
+//对所选定国家的首都的天气进行展示
+const DisplayWeather = ({capital}) => {
+  // whether用于存储所获取到的天气
+  const [weather, setWeather] = useState([])
+
+  //从天气数据库中获取天气数据
+  useEffect(() => {
+    axios.get(`http://api.weatherstack.com/current?access_key=${weather_api_key}&query=${capital}`).then(response => {
+      setWeather([response.data.current.temperature, response.data.current.weather_icons, 
+        response.data.current.wind_speed, response.data.current.wind_dir])
+      })
+  }, [capital])
+   return(
+     <div>
+       <div><b>temperature: </b>{weather[0]}</div>
+       <div><img src={weather[1]} style={{width: 150}}/></div>
+       <div><b>wind: </b>{weather[2]} mph direction {weather[3]}</div>
+     </div>
+   )
+}
+
+// 对单个国家进行展示
 const DisplaySingleCountry = ({singleCountry}) =>{
   return(
     <div>
       <h2>{singleCountry.name}</h2>
-      <div>captical {singleCountry.captital}</div>
+      <div>capital {singleCountry.capital}</div>
       <div>population {singleCountry.population}</div>
       <h3>languages</h3>
       <div><ul>{singleCountry.languages.map(value => <li key={value.name}>{value.name}</li>)}</ul></div>
       <img src={singleCountry.flag} style={{width: 200}}/>
+      <h3>Weather in {singleCountry.capital}</h3>
+      <DisplayWeather capital={singleCountry.capital}/>
     </div>
   )
 }
 
+// 当检索到的国家数量在1～10之间时对其进行显示
 const DisplayBatchCountries = ({country}) => {
   const [selectCountries, setSelectCountries] = useState(false)
   const handleSelectCountries = () => {setSelectCountries(true)}
   
+  // 如果selectCountries为true，则显示国家的具体信息
   if(selectCountries){
     return(<div><DisplaySingleCountry singleCountry={country}/></div>)
   }else{
@@ -50,8 +77,8 @@ const App = () => {
   const [countries, setCountries] = useState([])
   const [search, setSearch] = useState("")
   const [filterCountries, setFilterCountries] = useState([])
-
-  //用于从数据库中获取数据
+  
+  //用于从数据库中获取国家数据
   useEffect(() => {
     axios.get('https://restcountries.eu/rest/v2/all').then(response => {
       setCountries(response.data)
@@ -63,7 +90,6 @@ const App = () => {
     setSearch(event.target.value)
     setFilterCountries(countries.filter(value => value.name.toLowerCase().includes(search.toLowerCase())))
   }
-  
   return(
     <div>
     <div>find countries <input value={search} onChange={handleSearch}/></div>
