@@ -40,6 +40,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch ] = useState("")
 
+  // 从服务器端获取数据，注意，只有开启了json-server后才可以从服务器端获取数据。
   useEffect(() => {
     axios.get('http://localhost:3001/persons').then(response => {
       console.log(response.data)
