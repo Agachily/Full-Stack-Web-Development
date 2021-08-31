@@ -1,12 +1,21 @@
 import axios from 'axios'
+import react from 'react'
 import React, { useEffect, useState } from 'react'
 import phoneBookService from './services/phoneBook'
 
-const Person = ({personToShow}) => {
+// 用于展示电话簿中的信息并进行相应的操作
+const Person = ({personToShow, setPersons}) => {
+  // 用于从电话簿中删除联系人
+  const handleDelete = (person) => {
+    if(window.confirm(`Delete ${person.name} ?`)){
+      phoneBookService.deleteData(person.id).then(setPersons(personToShow.filter(item => item.id !== person.id)))
+    }
+  }
+
   return(
     <div>
     {personToShow.map(value => 
-      <div key={value.name}>{value.name} {value.number}</div>
+      <div key={value.name}>{value.name} {value.number} <button onClick={() => handleDelete(value)}>delete</button></div>
     )}
     </div>
   )
@@ -70,6 +79,9 @@ const App = () => {
   // 用于增加新的联系人
   const addPerson = (event) => {
     let flag = false
+    let updateID = 0
+    let repeatPerson = "" 
+
     event.preventDefault()
 
     // 用于构建新的联系人对象
@@ -79,16 +91,23 @@ const App = () => {
     }
 
     //判断联系人是否已经存在，如果不存在，则向persons数组中添加该联系人，如果存在，则报错
-    persons.forEach(value => {if(value.name === newName){flag = true}})
+    persons.forEach(value => {if(value.name === newName){
+      flag = true
+      updateID = value.id
+      repeatPerson = value.name
+    }})
     if (!flag){
-      // 将新的联系人对象添加到persons数组中
-      setPersons(persons.concat(personObject))
-      // 将新的联系人对象添加到服务器端的数据中
-      phoneBookService.sendData(personObject).then(response => console.log(response))
+      // 将新的联系人对象添加到服务器端的数据中，并添加到persons数组中。
+      phoneBookService.sendData(personObject).then(response => setPersons(persons.concat(response.data)))
       setNewName('')
       setNewNumber('')
     }else{
-      alert(newName + ' is already added to phonebook')
+      // 如果联系人已经存在，则对电话号码进行更新
+      if (window.confirm(`${repeatPerson} is already added to phonebook, replace the old number with a new one ?`)){
+        phoneBookService.updateData(personObject, updateID).then(response => {
+          setPersons(persons.map(value => value.id !== updateID ? value : response.data))
+        })
+      }
     }   
   }
 
@@ -106,7 +125,7 @@ const App = () => {
                   newNumber={newNumber} handleNumberChange={handleNumberChange} 
                   handlePersonChange={handlePersonChange}/>
       <h3>Numbers</h3>
-      <Person personToShow={personToShow}/>
+      <Person personToShow={personToShow} setPersons={setPersons}/>
     </div>
   )
 }

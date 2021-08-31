@@ -5,4 +5,12 @@ const sendData = (sendData) => {
     return axios.post(baseurl, sendData)
 }
 
-export default{sendData}
+const deleteData = (deleteID) => {
+    return axios.delete(`${baseurl}/${deleteID}`)
+}
+
+const updateData = (newData, updateID) => {
+    return axios.put(`${baseurl}/${updateID}`, newData)
+}
+
+export default{sendData, deleteData, updateData}
