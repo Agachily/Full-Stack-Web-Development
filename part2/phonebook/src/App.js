@@ -21,13 +21,17 @@ const Person = ({personToShow, setPersons}) => {
 }
 
  // 当姓名和电话号码发生变化时，展示相关信息 
-const ShowMessage = ({nameMessage, numberMessage}) => {
+const ShowMessage = ({nameMessage, numberMessage, errorMessage}) => {
   if (nameMessage === null && numberMessage === null){
     return null
   }else if(nameMessage === null && numberMessage != null){ 
-    return( <div className="info">{numberMessage}</div>)
+    if (errorMessage != null)
+    {
+      return null
+    }else
+    {return(<div className="info">{numberMessage}</div>)}
   }else if(nameMessage != null && numberMessage === null){
-    return( <div className="info">{nameMessage}</div>)
+    return(<div className="info">{nameMessage}</div>)
   }else{
     return(
       <div>
@@ -35,6 +39,15 @@ const ShowMessage = ({nameMessage, numberMessage}) => {
         <div className="info">{nameMessage}</div>
       </div>
     )
+  }
+}
+
+// 展示错误信息
+const ShowError = ({errorMessage}) => {
+  if(errorMessage === null){
+    return null
+  }else{
+    return (<div className="error">{errorMessage}</div>)
   }
 }
 
@@ -63,6 +76,7 @@ const App = () => {
   const [ newSearch, setNewSearch ] = useState("")
   const [ nameMessage, setNameMessage] = useState(null)
   const [ numberMessage, setNumberMessage] = useState(null)
+  const [ errorMessage, setErrorMessage] = useState(null)
 
   // 从服务器端获取数据，注意，只有开启了json-server后才可以从服务器端获取数据。
   useEffect(() => {
@@ -125,6 +139,14 @@ const App = () => {
       if (window.confirm(`${repeatPerson} is already added to phonebook, replace the old number with a new one ?`)){
         phoneBookService.updateData({...personObject, name: repeatPerson}, updateID).then(response => {
           setPersons(persons.map(value => value.id !== updateID ? value : {...response.data, name: repeatPerson}))
+        }).catch(error => {
+          setErrorMessage(`Information of ${repeatPerson} has already been removed from server`)
+          setPersons(persons.filter(item => item.id !== updateID))
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          setNewName('')
+          setNewNumber('')
         })
         setNumberMessage(`${repeatPerson}'s number has been changed`)
         setTimeout(() => {
@@ -144,7 +166,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <ShowMessage nameMessage={nameMessage} numberMessage={numberMessage}/>
+      <ShowError errorMessage={errorMessage}/>
+      <ShowMessage nameMessage={nameMessage} numberMessage={numberMessage} errorMessage={errorMessage}/>
       <Filter newSearch={newSearch} handleNewSearch={handleNewSearch}/>
       <h3>Add a new</h3>
       <PersonForm addPerson={addPerson} newName={newName} 
