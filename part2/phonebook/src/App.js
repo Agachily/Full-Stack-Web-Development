@@ -1,5 +1,4 @@
 import axios from 'axios'
-import react from 'react'
 import React, { useEffect, useState } from 'react'
 import phoneBookService from './services/phoneBook'
 
@@ -15,23 +14,36 @@ const Person = ({personToShow, setPersons}) => {
   return(
     <div>
     {personToShow.map(value => 
-      <div key={value.name}>{value.name} {value.number} <button onClick={() => handleDelete(value)}>delete</button></div>
+      <div key={value.name}>{value.name} {value.number} <button onClick={() => handleDelete(value)}>delete</button><p/></div> 
     )}
     </div>
   )
 }
 
+ // 当姓名和电话号码发生变化时，展示相关信息 
+const ShowMessage = ({nameMessage, numberMessage}) => {
+  if (nameMessage === null && numberMessage === null){
+    return null
+  }else if(nameMessage === null && numberMessage != null){ 
+    return( <div className="info">{numberMessage}</div>)
+  }else if(nameMessage != null && numberMessage === null){
+    return( <div className="info">{nameMessage}</div>)
+  }else{
+    return(
+      <div>
+        <div className="info">{numberMessage}</div>
+        <div className="info">{nameMessage}</div>
+      </div>
+    )
+  }
+}
+
 const PersonForm = ({addPerson, newName, newNumber, handleNumberChange, handlePersonChange}) => {
   return(
     <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handlePersonChange}/>
-          <br/>
-          number: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
+          <div>Name: <input value={newName} onChange={handlePersonChange}/></div><p/>
+          <div>Number: <input value={newNumber} onChange={handleNumberChange}/></div><p/>
           <button type="submit">add</button>
-        </div>
     </form>
   )
 }
@@ -49,6 +61,8 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch ] = useState("")
+  const [ nameMessage, setNameMessage] = useState(null)
+  const [ numberMessage, setNumberMessage] = useState(null)
 
   // 从服务器端获取数据，注意，只有开启了json-server后才可以从服务器端获取数据。
   useEffect(() => {
@@ -90,8 +104,8 @@ const App = () => {
       number: newNumber
     }
 
-    //判断联系人是否已经存在，如果不存在，则向persons数组中添加该联系人，如果存在，则报错
-    persons.forEach(value => {if(value.name === newName){
+    //判断联系人是否已经存在，如果不存在，则向persons数组和服务器中添加该联系人，如果存在，则提示相关信息
+    persons.forEach(value => {if(value.name.toLowerCase() === newName.toLocaleLowerCase()){
       flag = true
       updateID = value.id
       repeatPerson = value.name
@@ -99,14 +113,25 @@ const App = () => {
     if (!flag){
       // 将新的联系人对象添加到服务器端的数据中，并添加到persons数组中。
       phoneBookService.sendData(personObject).then(response => setPersons(persons.concat(response.data)))
+      //显示已经添加联系人的信息
+      setNameMessage(`Added ${newName}`)
+      setTimeout(() => {
+        setNameMessage(null)
+      }, 5000)
       setNewName('')
       setNewNumber('')
     }else{
       // 如果联系人已经存在，则对电话号码进行更新
       if (window.confirm(`${repeatPerson} is already added to phonebook, replace the old number with a new one ?`)){
-        phoneBookService.updateData(personObject, updateID).then(response => {
-          setPersons(persons.map(value => value.id !== updateID ? value : response.data))
+        phoneBookService.updateData({...personObject, name: repeatPerson}, updateID).then(response => {
+          setPersons(persons.map(value => value.id !== updateID ? value : {...response.data, name: repeatPerson}))
         })
+        setNumberMessage(`${repeatPerson}'s number has been changed`)
+        setTimeout(() => {
+          setNumberMessage(null)
+        }, 5000)
+        setNewName('')
+       setNewNumber('')
       }
     }   
   }
@@ -119,8 +144,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <ShowMessage nameMessage={nameMessage} numberMessage={numberMessage}/>
       <Filter newSearch={newSearch} handleNewSearch={handleNewSearch}/>
-      <h3>add a new</h3>
+      <h3>Add a new</h3>
       <PersonForm addPerson={addPerson} newName={newName} 
                   newNumber={newNumber} handleNumberChange={handleNumberChange} 
                   handlePersonChange={handlePersonChange}/>
