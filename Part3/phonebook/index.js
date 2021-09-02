@@ -1,10 +1,16 @@
 // 导入express
 const { response } = require('express')
 const express = require('express')
+const morgan = require('morgan')
 // 创建一个存储在app变量中的express应用
 const app = express()
+
+// 创建morgan token
+//morgan.token('json', (req) => { return JSON.stringify(req.body)})
+
 // 激活json-parser并实现一个处理http post请求的初始处理程序
 app.use(express.json())
+app.use(morgan('tiny'))
 
 // 以下为服务器中存储的联系人数据
 let notes = [
