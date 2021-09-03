@@ -87,8 +87,9 @@ const App = () => {
 
   //当用于搜索的文本发生变化时，对该文本进行更新，并对数据库中的国家进行过滤
   const handleSearch = (event) => {
+    let temp = event.target.value
     setSearch(event.target.value)
-    setFilterCountries(countries.filter(value => value.name.toLowerCase().includes(search.toLowerCase())))
+    setFilterCountries(countries.filter(value => value.name.toLowerCase().includes(temp.toLowerCase())))
   }
   return(
     <div>
