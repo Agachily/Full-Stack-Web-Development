@@ -64,7 +64,7 @@ describe('total likes', () => {
     })
 })
 
-describe('most likes', () => {
+describe('most likes blogs', () => {
     const favoriteBlog = {
         title: "Canonical string reduction",
         author: "Edsger W. Dijkstra",
