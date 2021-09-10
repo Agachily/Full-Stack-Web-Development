@@ -34,7 +34,7 @@ test('The number of the blogs should increase by 1 after post a new one', async(
 })
 
 // 如果请求中缺少like属性，它的默认值应为0
-test('addition without likes, default should be 0', async ()=>{
+test('addition without likes, default should be 0', async()=>{
     let added = {}
     const newBlog = {
         title: "test 5",
@@ -57,7 +57,7 @@ test('addition without likes, default should be 0', async ()=>{
 })
 
 // 如果所发送的数据缺少title和author，则返回状态码404
-test('If the title and author are misses, 404 should be returned', async () => {
+test('If the title and author are misses, 404 should be returned', async() => {
     const badBlog = {
         "author": "Author7",
         "likes": 7
@@ -65,6 +65,24 @@ test('If the title and author are misses, 404 should be returned', async () => {
 
     await api.post('/api/blogs').send(badBlog).expect(400)
 
+})
+
+// 如果所发送的数据被删除，所返回的额状态码应该是204
+test('Respone code should be 204 after delete 1 after delete', async() => {
+    const allBlogs = (await api.get('/api/blogs')).body
+    await api.delete(`/api/blogs/${allBlogs[0].id}`).expect(204)
+})
+
+// 如果所发送的数据被更新。则返回状态码200
+test('Response code should be 200 after update the blog', async() => {
+    const allBlogs = (await api.get('/api/blogs')).body
+    const newBlog = {
+        "title": "test 7",
+        "author": "Author7",
+        "url": "test url 7",
+        "likes": 7
+    }
+    await api.put(`/api/blogs/${allBlogs[0].id}`).send(newBlog).expect(200)
 })
 
 afterAll(() => {
