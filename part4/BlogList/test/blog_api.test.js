@@ -85,6 +85,7 @@ test('Response code should be 200 after update the blog', async() => {
     await api.put(`/api/blogs/${allBlogs[0].id}`).send(newBlog).expect(200)
 })
 
+
 afterAll(() => {
     mongoose.connection.close()
 })

@@ -2,43 +2,37 @@ const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
 
-usersRouter.post('/', async (request, response) => {
-    let isUnique = false
-    const body = request.body
-
-  const saltRounds = 10
-  if((body.password.length < 3) || (body.username.length < 3) ){
-    return response.status(400).json({error:'The length of password and username should at least be 3'})
-  }
-
-  if(!body.username || !body.password){
-      return response.status(400).json({error:'username and password should be both submitted'})
-  }
-
-  const cunrrentUser = await User.find({})
-  cunrrentUser.forEach(value => {
-      if(value.username == body.username){
-        isUnique = true
+usersRouter.post('/', async (request, response, next) => {
+    try {
+      const body = request.body
+      const saltRounds = 10
+      if (body.password.length === 0) {
+        return response.status(400).json({
+          error: 'User validation failed: password: password is required'
+        })
       }
-  })
-  if(isUnique){
-    return response.status(400).json({error:'username must be unique'})
-  }
-  const passwordHash = await bcrypt.hash(body.password, saltRounds)
-
-  const user = new User({
-    username: body.username,
-    name: body.name,
-    passwordHash,
-  })
-
-  const savedUser = await user.save()
-  response.json(savedUser)
+      if (body.password.length < 3) {
+        return response.status(400).json({
+          error: 'User validation failed: password: password is too short'
+        })
+      }
+      const passwordHash = await bcrypt.hash(body.password, saltRounds)
+  
+      const user = new User({
+        username: body.username,
+        name: body.name,
+        passwordHash: passwordHash
+      })
+      const savedUser = await user.save()
+      response.json(savedUser)
+    } catch (exception) {
+      next(exception)
+    }
 })
 
 usersRouter.get('/', async (request, response) => {
-    const users = await User.find({})
-    response.json(users)
+    const users = await User.find({}).populate('blogs', { title: 1, url: 1, likes: 1 })
+    response.json(users.map(u => u.toJSON()))
 })
 
 module.exports = usersRouter
