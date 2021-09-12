@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const jwt = require('jsonwebtoken')
 
 const api = supertest(app)
 
@@ -19,18 +20,23 @@ test('id is deifned as the identifier', async() => {
 
 // 验证是否能创建一个新的blog
 test('The number of the blogs should increase by 1 after post a new one', async() => {
+    //获取所有的用户
+    const myLogin = {
+        username: "test13",
+        password: "123456",
+    }
+    const login = await api.post("/api/login").send(myLogin)
+    // 获取初始博客的个数
     const initialLength = (await api.get('/api/blogs')).body.length
     const newBlog = {
-        "title": "test 4",
-        "author": "Author3",
-        "url": "test url 3",
+        "title": "test 9",
+        "author": "Author9",
+        "url": "test url 9",
         "likes": 15
     } 
-
-    await api.post('/api/blogs').send(newBlog)
-
-    const response = await api.get('/api/blogs')
-    expect(response.body).toHaveLength(initialLength + 1)
+    await api.post('/api/blogs').set('Authorization',`bearer ${login.body.token}`).send(newBlog)
+    const addedLength = await api.get('/api/blogs')
+    expect(addedLength.body).toHaveLength(initialLength + 1)
 })
 
 // 如果请求中缺少like属性，它的默认值应为0
@@ -54,6 +60,17 @@ test('addition without likes, default should be 0', async()=>{
     console.log(added)
     console.log(added.likes)
     expect(added.likes).toBe(0)
+})
+
+// 如果发送的令牌不存在，则返回状态码401
+test('If the token does not exist, return 401', async() =>{
+    const newBlog = {
+        "title": "test 9",
+        "author": "Author9",
+        "url": "test url 9",
+        "likes": 15
+    } 
+    await api.post('/api/blogs').set('Authorization','').send(newBlog).expect(401)
 })
 
 // 如果所发送的数据缺少title和author，则返回状态码404
