@@ -1,12 +1,41 @@
 POST http://localhost:3003/api/blogs
-Content-Type:: application/json
+Content-Type: application/json
 
 {
-    "title": "test 1",
-    "Author": "Author1",
-    "url": "test url",
-    "likes": 2
+    "title": "test 7",
+    "author": "Author7",
+    "url": "test url 7",
+    "likes": 7
 }
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
 
+{
+    "author": "Author7",
+    "likes": 7
+}
+###
+DELETE http://localhost:3003/api/blogs/613b68ebb492cd6e6bededd2
+###
+PUT http://localhost:3003/api/blogs/613b9443e1c4d9647aa498f2
+Content-Type: application/json
+
+{
+    "title": "test 7",
+    "author": "Author7",
+    "url": "test url 7",
+    "likes": 7
+}
 ### 
 GET http://localhost:3003/api/blogs 
+
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "Zhang Beihai",
+    "name": "Beihai",
+    "password": 123456
+}
