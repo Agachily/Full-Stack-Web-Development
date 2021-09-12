@@ -6,8 +6,10 @@ const api = supertest(app)
 
 // 如果用户名不唯一，则返回状态码400
 test('Response code 400 is the username is not unique', async() => {
+    const response = await api.get('/api/users')
+    const testUsername = response[0].username
     const testUser = {
-        "username": "root",
+        "username": `${testUsername}`,
         "name": "root",
         "password": "asdasdwe"
     }

@@ -1,8 +1,6 @@
 const blogsRouter = require('express').Router()
-const { request, response } = require('../app')
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const mongoose = require('mongoose');
 
 blogsRouter.get('/blogs', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { name: 1, username: 1 })
