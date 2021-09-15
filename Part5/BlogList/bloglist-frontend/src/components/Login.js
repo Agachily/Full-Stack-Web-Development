@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import loginService from '../services/login'
+import blogService from '../services/blogs'
 
-const Login = ({login}) => {
+const Login = ({setLogedUser}) => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState([])
@@ -13,8 +14,10 @@ const Login = ({login}) => {
       const user = await loginService.login({
         username, password,
       })
+      blogService.setToken(user.token)
+      console.log(blogService.token)
       setUser(user)
-      console.log(user)
+      setLogedUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -31,7 +34,7 @@ const Login = ({login}) => {
     return(
       <form onSubmit={handleLogin}>
       <div>
-        username
+        username: 
           <input
           type="text"
           value={username}
@@ -40,7 +43,7 @@ const Login = ({login}) => {
         />
       </div>
       <div>
-        password
+        password: 
           <input
           type="password"
           value={password}
