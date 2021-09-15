@@ -32,8 +32,8 @@ const Create = ({blogs, setBlogs}) => {
 
   return(
     <div>
-    <div>{successMessage}</div>
-    <div>{errorMessage}</div>
+    <div><h2>{successMessage}</h2></div>
+    <div><h2>{errorMessage}</h2></div>
     <form onSubmit={handleCreate}>
     <div>
       title: 
