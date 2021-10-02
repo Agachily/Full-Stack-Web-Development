@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-const Blog = ({blog, handleLikeChange}) => {
+const Blog = ({blog, handleLikeChange, logedUserName, handleDelete}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -8,7 +8,19 @@ const Blog = ({blog, handleLikeChange}) => {
     borderWidth: 1,
     marginBottom: 5
   }
+  
   const [blogDetailVisible, setBlogDetailVisible] = useState(false)
+  const deleteBlog = () =>{
+    if(blog.author === logedUserName){
+      return(
+        <div>
+          <button onClick={()=>handleDelete(blog.id)}>remove</button>
+        </div>
+      )
+    }else{
+      return
+    }
+  }
   
   if(!blogDetailVisible)
   {
@@ -24,7 +36,8 @@ const Blog = ({blog, handleLikeChange}) => {
       <div>{blog.title}<button onClick={()=>setBlogDetailVisible(false)}>hide</button></div>
       <div>{blog.url}</div>
       <div>{blog.likes}<button onClick={()=>handleLikeChange(blog.id)}>like</button></div>
-      <div>{blog.author} {blog.dislike}</div>
+      <div>{blog.author}</div>
+      {deleteBlog()}
     </div> 
     )
   }
