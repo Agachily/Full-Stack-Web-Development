@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
-const Login = ({setLogedUser}) => {
-  const [username, setUsername] = useState('') 
+const Login = ({ setLogedUser }) => {
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
-  
 
   // 检查在本地存储中是否能找到用户的登陆信息
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
+      console.log(user.name+'kkk')
       setUser(user)
       blogService.setToken(user.token)
     }
@@ -45,31 +46,35 @@ const Login = ({setLogedUser}) => {
   else{
     return(
       <div>
-      <div><h2>{errorMessage}</h2></div>
-      <form onSubmit={handleLogin}>
-      <div>
-        username: 
-          <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password: 
-          <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-      </form>
+        <div><h2>{errorMessage}</h2></div>
+        <form onSubmit={handleLogin}>
+          <div>
+            username:
+            <input
+              type="text"
+              value={username}
+              name="Username"
+              onChange={({ target }) => setUsername(target.value)}
+            />
+          </div>
+          <div>
+        password:
+            <input
+              type="password"
+              value={password}
+              name="Password"
+              onChange={({ target }) => setPassword(target.value)}
+            />
+          </div>
+          <button type="submit">login</button>
+        </form>
       </div>
     )
   }
+}
+
+Login.propTypes = {
+  setLogedUser: PropTypes.func.isRequired
 }
 
 export default Login

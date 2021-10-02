@@ -10,26 +10,22 @@ const App = () => {
   const [logedUser, setLogedUser] = useState([])
   const [createVisible, setCreateVisible] = useState(false)
 
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [])
+  useEffect(() => {blogService.getAll().then(blogs => setBlogs( blogs ))}, [])
 
   /* when click "create new blog", the form for creating new blog is shown, when
    click "cancle" is disappears. */
-  const showCreateBlogForm = () =>{
-    const hideWhenVisible = {display: createVisible ? 'none' : ''}
-    const showWhenVisible = {display: createVisible ? '' : 'none'}
+  const showCreateBlogForm = () => {
+    const hideWhenVisible = { display: createVisible ? 'none' : '' }
+    const showWhenVisible = { display: createVisible ? '' : 'none' }
 
     return(
       <div>
         <div style={hideWhenVisible}>
-          <button onClick={()=>setCreateVisible(true)}>create new blog</button>
+          <button onClick={() => setCreateVisible(true)}>create new blog</button>
         </div>
         <div style={showWhenVisible}>
           <Create blogs={blogs} setBlogs={setBlogs}/>
-          <button onClick={()=>setCreateVisible(false)}>cancel</button>
+          <button onClick={() => setCreateVisible(false)}>cancel</button>
         </div>
       </div>
     )
@@ -38,17 +34,16 @@ const App = () => {
   /* update the information of blogs when "likes" change */
   const handleLikeChange = (blogId) => {
     const targetBlog = blogs.find(blog => blog.id === blogId)
-    const newTargetBlog = {...targetBlog, likes: targetBlog.likes+1}
+    const newTargetBlog = { ...targetBlog, likes: targetBlog.likes+1 }
     blogService.update(blogId, newTargetBlog)
     setBlogs(blogs.map(blog => blog.id !== blogId ? blog : newTargetBlog))
   }
 
   /* Delete blog by its id */
-  const handleDelete = (blogId) =>{
+  const handleDelete = (blogId) => {
     const blog = blogs.find(blog => blog.id === blogId)
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
-      blogService.deleteBlog(blogId)
-                 .then(setBlogs(blogs.filter(item => item.id !== blogId)), alert("Delete Succeed"))
+      blogService.deleteBlog(blogId).then(setBlogs(blogs.filter(item => item.id !== blogId)), alert('Delete Succeed'))
     }
   }
 
@@ -60,8 +55,7 @@ const App = () => {
       <Logout blogs={blogs} setBlogs={setBlogs}/>
       <h2>blogs</h2>
       {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} handleLikeChange={handleLikeChange} 
-              logedUserName={logedUser.name} handleDelete={handleDelete}/>
+        <Blog key={blog.id} blog={blog} handleLikeChange={handleLikeChange} logedUserName={logedUser.name} handleDelete={handleDelete}/>
       )}
       {showCreateBlogForm()}
     </div>

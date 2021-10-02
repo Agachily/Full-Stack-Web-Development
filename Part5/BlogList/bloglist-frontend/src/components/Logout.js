@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
-const Logout = ({blogs, setBlogs}) => {
-    const [logoutinfo, setLogoutinfo] = useState('') 
+const Logout = () => {
+  const [logoutinfo] = useState('')
 
-    const handleLogout = () => {
-        window.localStorage.clear()
-        window.location.replace("http://localhost:3000/")
-    }
+  const handleLogout = () => {
+    window.localStorage.clear()
+    window.location.replace('http://localhost:3000/')
+  }
 
-   return(
-       <div>
-           <div>{logoutinfo}</div>
-           <button onClick={handleLogout}>logout</button>
-       </div>
-   )
+  return(
+    <div>
+      <div>{ logoutinfo }</div>
+      <button onClick={ handleLogout }>logout</button>
+    </div>
+  )
 }
 
 export default Logout
