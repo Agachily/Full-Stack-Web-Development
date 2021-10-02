@@ -18,7 +18,7 @@ const App = () => {
 
   /* when click "create new blog", the form for creating new blog is shown, when
    click "cancle" is disappears. */
-  const createBlog = () =>{
+  const showCreateBlogForm = () =>{
     const hideWhenVisible = {display: createVisible ? 'none' : ''}
     const showWhenVisible = {display: createVisible ? '' : 'none'}
 
@@ -35,6 +35,14 @@ const App = () => {
     )
   }
 
+  /* update the information of blogs when "likes" change */
+  const handleLikeChange = (blogId) => {
+    const targetBlog = blogs.find(blog => blog.id === blogId)
+    const newTargetBlog = {...targetBlog, likes: targetBlog.likes+1}
+    blogService.update(blogId, newTargetBlog)
+    setBlogs(blogs.map(blog => blog.id !== blogId ? blog : newTargetBlog))
+  }
+
   console.log(logedUser)
   return (
     <div>
@@ -43,9 +51,9 @@ const App = () => {
       <Logout blogs={blogs} setBlogs={setBlogs}/>
       <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLikeChange={handleLikeChange}/>
       )}
-      {createBlog()}
+      {showCreateBlogForm()}
     </div>
   )
 }
