@@ -43,6 +43,7 @@ const App = () => {
     setBlogs(blogs.map(blog => blog.id !== blogId ? blog : newTargetBlog))
   }
 
+
   console.log(logedUser)
   return (
     <div>
@@ -50,7 +51,7 @@ const App = () => {
       <Login setLogedUser={setLogedUser}/>
       <Logout blogs={blogs} setBlogs={setBlogs}/>
       <h2>blogs</h2>
-      {blogs.map(blog =>
+      {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
         <Blog key={blog.id} blog={blog} handleLikeChange={handleLikeChange}/>
       )}
       {showCreateBlogForm()}
