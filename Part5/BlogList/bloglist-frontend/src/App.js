@@ -8,12 +8,30 @@ import blogService from './services/blogs'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [logedUser, setLogedUser] = useState([])
+  const [createVisible, setCreateVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
   }, [])
+
+  const createBlog = () =>{
+    const hideWhenVisible = {display: createVisible ? 'none' : ''}
+    const showWhenVisible = {display: createVisible ? '' : 'none'}
+
+    return(
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={()=>setCreateVisible(true)}>create new blog</button>
+        </div>
+        <div style={showWhenVisible}>
+          <Create blogs={blogs} setBlogs={setBlogs}/>
+          <button onClick={()=>setCreateVisible(false)}>cancel</button>
+        </div>
+      </div>
+    )
+  }
 
   console.log(logedUser)
   return (
@@ -25,7 +43,7 @@ const App = () => {
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
-      <Create blogs={blogs} setBlogs={setBlogs}/>
+      {createBlog()}
     </div>
   )
 }
