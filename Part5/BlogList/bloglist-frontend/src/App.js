@@ -16,6 +16,8 @@ const App = () => {
     )  
   }, [])
 
+  /* when click "create new blog", the form for creating new blog is shown, when
+   click "cancle" is disappears. */
   const createBlog = () =>{
     const hideWhenVisible = {display: createVisible ? 'none' : ''}
     const showWhenVisible = {display: createVisible ? '' : 'none'}
