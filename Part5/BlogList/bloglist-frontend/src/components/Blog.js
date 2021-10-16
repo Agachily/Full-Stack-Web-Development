@@ -20,7 +20,7 @@ const Blog = ( { blog, handleLikeChange, logedUserName, handleDelete } ) => {
     if(blog.author === logedUserName || blog.author === storedUsername){
       return(
         <div>
-          <button onClick={() => handleDelete(blog.id)}>remove</button>
+          <button onClick={() => handleDelete(blog.id)} id='removeButton'>remove</button>
         </div>
       )
     }else{
@@ -34,7 +34,7 @@ const Blog = ( { blog, handleLikeChange, logedUserName, handleDelete } ) => {
       <div style={blogStyle} className='displayBlog'>
         <div>{blog.title}</div>
         <div>{blog.author}</div>
-        <button onClick={() => setBlogDetailVisible(true)}>view</button>
+        <button onClick={() => setBlogDetailVisible(true)} id='viewButton'>view</button>
       </div>
     )
   }else{
@@ -42,7 +42,7 @@ const Blog = ( { blog, handleLikeChange, logedUserName, handleDelete } ) => {
       <div style={blogStyle}>
         <div>{blog.title}<button onClick={() => setBlogDetailVisible(false)}>hide</button></div>
         <div>{blog.url}</div>
-        <div>{blog.likes}<button onClick={() => handleLikeChange(blog.id)}>like</button></div>
+        <div>{blog.likes}<button onClick={() => handleLikeChange(blog.id)} id='likeButton'>like</button></div>
         <div>{blog.author}</div>
         {deleteBlog()}
       </div>

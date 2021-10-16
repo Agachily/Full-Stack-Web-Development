@@ -21,7 +21,7 @@ const App = () => {
     return(
       <div>
         <div style={hideWhenVisible}>
-          <button onClick={() => setCreateVisible(true)}>create new blog</button>
+          <button onClick={() => setCreateVisible(true)} id='creatNewBlogButton'>create new blog</button>
         </div>
         <div style={showWhenVisible}>
           <Create blogs={blogs} setBlogs={setBlogs}/>
