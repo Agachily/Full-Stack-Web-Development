@@ -16,9 +16,9 @@ Content-Type: application/json
     "likes": 7
 }
 ###
-DELETE http://localhost:3003/api/blogs/613b68ebb492cd6e6bededd2
+DELETE http://localhost:3003/api/blogs/613dd8c10e703e11a987e697
 ###
-PUT http://localhost:3003/api/blogs/613b9443e1c4d9647aa498f2
+PUT http://localhost:3003/api/blogs/613b6aa4ce7266875e1ee491
 Content-Type: application/json
 
 {
@@ -35,7 +35,55 @@ POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-    "username": "Zhang Beihai",
-    "name": "Beihai",
-    "password": 123456
+    "username": "test14",
+    "name": "test12",
+    "password": "asdasdwe"
 }
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "test13",
+    "name": "test12",
+    "password": "123456"
+}
+### 
+GET http://localhost:3003/api/users
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "test 8",
+    "author": "Author8",
+    "url": "test url 8",
+    "likes": 1,
+    "userId": "613de9909d4f9ffe33ab55bc"
+}
+
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username":"test13",
+    "password":"123456"
+}
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QxMyIsImlkIjoiNjEzZTBmYWM5YzZjODRjODgwMWE3YTE5IiwiaWF0IjoxNjMxNzA4ODc2fQ.DI4UZgNsw5mVtCp9uIZTWT9dAuur8eZARWvbYtpkMPo
+
+{
+    "title": "test token with middleware 4",
+    "author": "Author12",
+    "url": "test url token with middleware 4",
+    "likes": 5
+}
+
+###
+DELETE http://localhost:3003/api/blogs/613e17c5761d7c10631a091c
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QxMyIsImlkIjoiNjEzZTBmYWM5YzZjODRjODgwMWE3YTE5IiwiaWF0IjoxNjMxNDU3MjA5fQ.fs6wly6x8FZPYFvlz4lmK42YhO_b_mJdPbZwoY6nnrA
