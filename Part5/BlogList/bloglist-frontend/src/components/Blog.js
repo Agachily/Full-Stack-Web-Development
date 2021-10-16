@@ -31,8 +31,9 @@ const Blog = ( { blog, handleLikeChange, logedUserName, handleDelete } ) => {
   if(!blogDetailVisible)
   {
     return(
-      <div style={blogStyle}>
-        {blog.title}
+      <div style={blogStyle} className='displayBlog'>
+        <div>{blog.title}</div>
+        <div>{blog.author}</div>
         <button onClick={() => setBlogDetailVisible(true)}>view</button>
       </div>
     )

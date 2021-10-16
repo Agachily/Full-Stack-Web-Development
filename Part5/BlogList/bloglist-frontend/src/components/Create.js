@@ -9,6 +9,7 @@ const Create = ({ blogs, setBlogs }) => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   const handleCreate = async (event) => {
+    setBlogs(blogs)
     event.preventDefault()
     try {
       blogService.create({ title, author, url }).then(returnedBlog => {
@@ -41,6 +42,7 @@ const Create = ({ blogs, setBlogs }) => {
             type="text"
             value={title}
             name="title"
+            id='title'
             onChange={({ target }) => setTitle(target.value)}
           />
         </div>
@@ -50,6 +52,7 @@ const Create = ({ blogs, setBlogs }) => {
             type="author"
             value={author}
             name="author"
+            id='author'
             onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
@@ -59,6 +62,7 @@ const Create = ({ blogs, setBlogs }) => {
             type="url"
             value={url}
             name="url"
+            id='url'
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
